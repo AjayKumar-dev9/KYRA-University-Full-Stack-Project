@@ -1,0 +1,259 @@
+{% extends "extent.html" %}
+
+{% block content %}
+<title>Register</title>
+<style>
+  .register-page {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+<div class="register-page">
+<style>
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  width: 400px;
+}
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+.success-message {
+  color: rgb(8, 95, 8);
+  margin-bottom: 20px;
+  font-size: x-large;
+}
+.error-message {
+  color: rgb(131, 8, 8);
+  margin-bottom: 20px;
+  font-size: x-large;
+}
+.info-message {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: x-large;
+}
+  </style>
+
+  <div class="container">
+    <h2>Register</h2>
+    <form action="" method="POST" onsubmit= "return validate_form()">
+    {% csrf_token %}
+       {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == "success" %}
+          <div class="success-message">*{{ message }}</div>
+          {% elif message.tags == "error" %}
+          <div class="error-message">*{{ message }}</div>
+          {% else %}
+          <div class="info-message">*{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+    {% endif %}
+    <div id="message" style="font-weight:bold; font-size: x-large;"></div>
+      <div class="form-group">
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="first_name">
+      </div>
+      <div class="form-group">
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="last_name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <button type="button" id="verify">Verify</button>
+      </div>
+      <div class="form-group">
+        <label for="otp" id="verify_lable">OTP</label>
+        <input type="text" id="otp" name="otp">
+        <button type="button" id="otp_submit">Sumbmit</button>
+        <button type="button" id="resendotp">Resend OTP</button>
+      </div>
+      <div class="form-group">
+        <label for="username">User Name</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="confirm">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+      </div>
+      <button type="submit" id="register">Register</button>
+      <p id="error_msg" class="error_msg" style="color:rgb(148, 5, 5);font-size: 15px;"></p>
+    </form>
+  </div>
+<script>
+  otp_field = document.querySelector('#otp')
+  otp_lable = document.querySelector('#verify_lable')
+  otp_btn = document.querySelector('#otp_submit')
+  resend_btn = document.querySelector('#resendotp')
+  otp_field.style.display = 'none';
+  otp_lable.style.display = 'none';
+  otp_btn.style.display = 'none';
+  resend_btn.style.display = 'none';
+
+  // helper to read CSRF cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+  document.querySelector('#verify').addEventListener('click',function(){
+    let email = document.querySelector('#email').value;
+    let first_name = document.querySelector('#fname').value;
+    let last_name = document.querySelector('#lname').value;
+    const for_email = "for_email"
+    otp_field.style.display = '';
+    otp_lable.style.display = '';
+    otp_btn.style.display = '';
+    resend_btn.style.display = '';
+
+    send_otprequest(email,first_name,last_name,for_email);
+  });
+  document.querySelector('#resendotp').addEventListener('click',function(){
+    let email = document.querySelector('#email').value;
+    let first_name = document.querySelector('#fname').value;
+    let last_name = document.querySelector('#lname').value;
+    const for_email = "for_email"
+
+    send_otprequest(email,first_name,last_name,for_email);
+  })
+  function send_otprequest(email,first_name,last_name,for_email){ 
+    fetch('/signup/',{method:'POST',body: JSON.stringify({ email:email,first_name:first_name,last_name:last_name,for_email:for_email}),
+      headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin' // ensures cookies are sent (session)
+    }).then(res=>res.json())
+    .then(data=>{
+      let messageDiv = document.querySelector('#message');
+      console.log('test',data.success)
+      if(data.success){
+        messageDiv.className = 'success-message';
+        messageDiv.textContent = data.message;
+      }else{
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = data.error || 'Something went wrong.';
+     }
+    })
+    .catch(error => {
+        let messageDiv = document.querySelector('#message');
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = '';
+        console.error('Error:', error);
+    });
+  
+  }
+  document.querySelector('#otp_submit').addEventListener('click',function(){
+    const otp = document.querySelector('#otp').value;
+    const for_otp = 'for_otp';
+
+    fetch('/signup/',{method:'POST',body:JSON.stringify({otp:otp,for_otp:for_otp}),
+    headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        credentials: 'same-origin'
+    }).then(res=>res.json())
+    .then(data=>{
+      let messageDiv = document.querySelector('#message');
+      if(data.success){
+        messageDiv.className = 'success-message';
+        messageDiv.textContent = data.message;
+      }else{
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = data.error || 'Something went wrong.';
+     }
+    })
+    .catch(error => {
+        let messageDiv = document.querySelector('#message');
+        messageDiv.className = 'error-message';
+        messageDiv.textContent = 'Network error. Please try again.';
+    });
+  });
+
+  function validate_form(){
+    const email = document.querySelector('#email').value.trim()
+    const password = document.querySelector('#password').value.trim()
+    const confirm_password = document.querySelector('#confirm_password').value.trim()
+    const error_msg = document.querySelector('#error_msg')
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)){
+      error_msg.textContent = "Enter a valid Email";
+      return false;
+    }    
+
+    const pwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!pwPattern.test(password)){
+      error_msg.textContent = "Password must be 8+ chars with upper, lower, and a number.";
+      return false;
+    }
+
+    if (password != confirm_password){
+      error_msg.textContent = "Passwords did't match."
+      return false;
+    }
+
+    return true;
+
+  }
+</script>
+</div>
+{% endblock content %}

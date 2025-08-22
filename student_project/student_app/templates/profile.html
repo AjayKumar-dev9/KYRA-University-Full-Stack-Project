@@ -1,0 +1,115 @@
+{% extends "extent.html" %}
+
+{% block content %}
+
+<title>Profile Page</title>
+  <style>
+    
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .profile-container {
+      max-width: 600px;
+      margin: 100px auto 50px; /*  margin: 50px auto; */
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .profile-image {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-image img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #007BFF;
+    }
+
+    .profile-info {
+      text-align: center;
+    }
+
+    .profile-info h2 {
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .profile-info p {
+      color: #666;
+      margin: 4px 0;
+    }
+
+    .info-section {
+      margin-top: 30px;
+    }
+
+    .info-item {
+      margin-bottom: 15px;
+    }
+
+    .info-item strong {
+      display: inline-block;
+      width: 130px;
+      color: #555;
+    }
+
+    .edit-button {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .edit-button button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .edit-button button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <div class="profile-container">
+    <div class="profile-image">
+      <img src="{{Student.image.url}}" alt="Profile Picture">
+    </div>
+    <div class="profile-info">
+      <h2>{{Student.first_name}} {{Student.last_name}}</h2>
+      <p></p>
+      <p>{{Student.email}}</p>
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <strong>Gender:</strong> {{Student.gender}}
+      </div>
+      <div class="info-item">
+        <strong>Date of Birth:</strong> {{Student.dob}}
+      </div>
+      <div class="info-item">
+        <strong>Graduation:</strong> {{Student.graduation_completed}}
+      </div>
+      <div class="info-item">
+        <strong>Course:</strong> {{Student.course}}
+      </div>
+    </div>
+
+    <div class="edit-button">
+      <a href="{% url 'edit_profile' %}" style="color: black; text-decoration: none;"><button>Edit Profile</button></a>
+    </div>
+  </div>
+
+{% endblock content %}

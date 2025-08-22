@@ -1,0 +1,157 @@
+{% extends "extent.html" %}
+{% block content %}
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+  }
+
+  .edit-container {
+    max-width: 600px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .profile-pic-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+  }
+
+  .profile-pic-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007BFF;
+  }
+
+  .profile-pic-container label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #007BFF;
+    color: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .profile-pic-container label:hover {
+    background: #0056b3;
+  }
+
+  .profile-pic-container input {
+    display: none; /* hide file input */
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  select {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border 0.2s;
+    background-color: #fff;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0,123,255,0.4);
+  }
+
+  button {
+    padding: 12px;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+</style>
+
+<div class="edit-container">
+  <h2>Edit Profile</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Profile Pic with Camera Icon -->
+    <div class="profile-pic-container">
+      <img id="previewImg" src="{{ student.image.url }}" alt="Profile Picture">
+      <label for="image">
+        📷
+      </label>
+      <input type="file" name="image" id="image" accept="image/*" onchange="previewImage(event)">
+    </div>
+
+    <!-- Other Inputs -->
+    <input type="text" name="first_name" value="{{ student.first_name }}" required>
+    <input type="text" name="last_name" value="{{ student.last_name }}" required>
+    <input type="text" name="phone" value="{{ student.ph_no }}" required>
+    <input type="email" name="email" value="{{ student.email }}" readonly>
+    <input type="date" name="date_of_birth" value="{{ student.dob|date:'Y-m-d' }}">
+
+    <!-- Gender Dropdown -->
+    <select name="gender" required>
+      <option value="Male" {% if student.gender == "Male" %}selected{% endif %}>Male</option>
+      <option value="Female" {% if student.gender == "Female" %}selected{% endif %}>Female</option>
+      <option value="Other" {% if student.gender == "Other" %}selected{% endif %}>Other</option>
+    </select>
+
+    <!-- Graduation Completed -->
+    <select name="graduation" required>
+      <option value="Yes" {% if student.graduation_completed %}selected{% endif %}>Yes</option>
+      <option value="No" {% if not student.graduation_completed %}selected{% endif %}>No</option>
+    </select>
+
+    <input type="text" name="course" value="{{ student.course }}">
+
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+
+<script>
+  // Preview new image instantly
+  function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+      document.getElementById('previewImg').src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+  }
+</script>
+
+{% endblock %}

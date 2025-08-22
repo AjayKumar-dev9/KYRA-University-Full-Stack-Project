@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Cache-Control" content="no-store" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <style>
+            @import url(https://fonts.googleapis.com/css2?family=Baskervville+sc&family=Bungee+Tint&display=swap);
+            body{
+                margin: 0;
+                font-family: "Baskervville", serif;
+            }
+            .header{
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                margin: 5px;
+            }
+            .icon_area{
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 15px;
+            }
+            .icon{
+                border-radius: 10px;
+            }
+            .icon_text{
+                margin-top: 30px;
+            }
+            ul{
+                display: flex;
+                flex-wrap: nowrap;
+                list-style-type: none;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            li{
+                padding: 5px;
+                border-radius: 2px;
+                transition: transform 0.5s, background-color 0.5s;
+            }
+            li:hover{
+                transform: scale(1.1);
+                background-color: aliceblue;
+                border-bottom: 2px solid black;
+                cursor: pointer;
+            }
+            .main_content{
+                height: 600px;
+                background-image: url("{% static 'image/Main_backgorund.jpg' %}");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .main_heading{
+                font-family: "Bungee Tint", sans-serif;
+            }
+            .ranking{
+                /* background-color: bisque; */
+                text-align: center;
+            }
+            .our_ranking{
+                /* background-color: bisque; */
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-evenly;
+            }
+            .card1,.card2,.card3,.card4,.card5,.card6{
+                width: 300px;
+                height: 150px;
+                margin: 10px;
+                padding: 10px;
+                border: 1px solid cadetblue;
+                border-radius: 20px;
+                box-shadow: 2px 2px 8px 1px rgb(0,0,0,0.2);
+                background-color: rgb(56, 176, 136);
+                text-align: center;
+                margin-bottom: 50px;
+            }
+            h2{
+                color: rgb(132, 11, 11);
+            }
+            h3{
+                color: rgb(67, 67, 167);
+            }
+            h4{
+                color: white;
+            }
+            .about_us{
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                gap: 30px;
+                padding: 20px;
+                background-color: aliceblue;
+            }
+            .about_us_text{
+                padding: 15px;
+                text-align: justify;
+            }
+            .footer{
+                text-align: center;
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-evenly;
+                background-color: black;
+                color: white;
+                align-items: center;
+            }
+            .logout {
+                all: unset;
+                cursor: pointer;
+                color: inherit;     /* Optional: inherit text color */
+                font: inherit;      /* Optional: inherit font */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="icon_area">
+                    <image src="{% static 'image/logo_kyra.png' %}" alt="logo kyra" class="icon" width="70" hight="40"></image>
+                    <div class="icon_text"><strong>KYRA UNIVERSITY</strong></div>
+                </div>
+                <div class="menu_area">
+                    <ul>
+                        <li>Home</li>
+                        {% if Student %}
+                        <li><a href="{% url 'profile' %}" style="color: black; text-decoration: none;">Profile</a></li>
+                        {% else %}
+                        <li><a href="{% url 'form' %}" style="color: black; text-decoration: none;">Rigister</a></li>  
+                        {% endif %}                     
+                        <li><a href="#ranking" style="color: black; text-decoration: none;">Ranking</a></li>
+                        <li><a href="#about_us" style="color: black; text-decoration: none;">About US</a></li>
+                        {% if user.is_authenticated %}
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" style="all: unset; cursor: pointer; color: black;">
+                                    Logout ({{ user.username }})
+                                </button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'login' %}" style="color: black; text-decoration: none;">Login</a>/
+                        <a href="{% url 'signup' %}" style="color: black; text-decoration: none;">Sign-Up</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="content">
+                <div class="main_content">
+                    <h1 class="main_heading">Affordable world-class education</h1>
+                    <h2 style="color: white;">Exemplary standards, grounded on access</h2>
+                </div>
+                <h1 class="ranking" id="ranking">Ranking</h1>
+                <div class="our_ranking">
+                    <div class="card1">
+                        <h2>QS World Ranking</h2>
+                        <h4>#801-850</h4>
+                        <h3>World University Ranking</h3>
+                    </div>
+                    <div class="card2">
+                        <h2>NIRF</h2>
+                        <h4>#17</h4>
+                        <h3>India University Ranking</h3>
+                    </div>
+                    <div class="card3">
+                        <h2>SCOPUS</h2>
+                        <h4>#1097</h4>
+                        <h3>Publications in 2023</h3>
+                    </div>
+                    <div class="card4">
+                        <h2>MoU</h2>
+                        <h4>#79</h4>
+                        <h3>MoU's Signed</h3>
+                    </div>
+                    <div class="card5">
+                        <h2>Ongoing Projects</h2>
+                        <h4>#183</h4>
+                        <h3>Ongoing Projects</h3>
+                    </div>
+                    <div class="card6">
+                        <h2>Patents</h2>
+                        <h4>#46</h4>
+                        <h3>Patents Granted</h3>
+                    </div>
+                </div>
+                <div class="about_us" id="about_us">
+                    <div class="about_us_image">
+                        <image src="{% static 'image/aboutus.jpg' %}" alt="About Us" width="600"></image>
+                    </div>
+                    <div class="about_us_text">
+                        <h1>About Us</h1>
+                        <p>At KYRA@University, we believe that education is more than just earning a degree — 
+                           it's about shaping a future. Our university is dedicated to empowering students with 
+                           the knowledge, skills, and confidence to thrive in an ever-changing world. Whether 
+                           you're passionate about science, technology, arts, business, or the humanities, we 
+                           offer diverse programs designed to inspire innovation, critical thinking, and lifelong 
+                           learning. With experienced faculty, modern facilities, and a supportive learning environment, 
+                           we ensure each student’s journey is both enriching and transformative. From academic excellence 
+                           to real-world impact, KYRA@University is where potential meets opportunity. Join us — and build 
+                           a future that makes a difference.</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="footer">
+                <div class="address">
+                123 EAST TEXAS,<br>
+                CALIFORNIA,SOUTH<br>
+                UNITED STATES.
+            </div>
+            <div class="contact">
+                <p>KYRA@GMAIL.COM</p>
+                <P>+8074807561</P>
+                <P>@2025</P>
+            </div>
+        </div>  
+    </body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Success</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #f4f7fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .success-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .success-icon {
+      font-size: 60px;
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background-color: #28a745;
+      color: #fff;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+<form id="success" method="post">
+  {% csrf_token %}
+  <div class="success-container">
+    <div class="success-icon">✔️</div>
+    <h1>Success!</h1>
+    <p>Your are successfuly Register.</p>
+    <a href="{% url 'home' %}" class="btn">Go to Homepage</a>
+  </div>
+</form>
+</body>
+</html>

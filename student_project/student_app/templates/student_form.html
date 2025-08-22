@@ -1,0 +1,135 @@
+{% extends "extent.html" %}
+{% block content %}
+<title>Student Registration Form</title>
+<style>
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding: 40px 20px; */
+    /* min-height: calc(100vh - 80px); */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 40px 30px;
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+form h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="phone"],
+input[type="date"],
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+.btn_submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn_submit:hover {
+    background-color: #0056b3;
+}
+
+#preview {
+    display: none;
+    width: 100px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+#error_msg {
+    color: red;
+    font-size: 14px;
+    text-align: center;
+}
+</style>
+
+<div class="form-container">
+<form id="Registration_form" method="POST" action="" enctype="multipart/form-data" onsubmit="">
+    {% csrf_token %}
+    <h1>Student Registration</h1>
+
+    <p id="error_msg"></p>
+
+    <label for="first_name">First Name:</label>
+    <input type="text" name="first_name" id="first_name" placeholder="First Name">
+
+    <label for="last_name">Last Name:</label>
+    <input type="text" name="last_name" id="last_name" placeholder="Last Name">
+
+    <label for="phone">Phone No:</label>
+    <input type="text" name="phone" id="phone" placeholder="Phone No">
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" placeholder="Email">
+
+    <label for="date_of_birth">Date Of Birth:</label>
+    <input type="date" name="date_of_birth" id="date_of_birth" placeholder="Date Of Birth">
+
+    <label for="gender">Gender:</label>
+    <select name="gender" id="gender">
+    <option value="">-- Select Gender --</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Others">Others</option>
+    </select>
+
+    <label>Did you complete your graduation?</label>
+    <input type="radio" id="graduation_yes" name="graduation" value="Yes"> Yes
+    <input type="radio" id="graduation_no" name="graduation" value="No"> No
+
+    <label for="course">Course:</label>
+    <input type="text" id="course" name="course" placeholder="Please enter your course">
+
+    <label for="imageInput">Upload your Photo:</label>
+    <input type="file" id="imageInput" name="image" accept="image/*">
+    <img id="preview" src="" alt="Image Preview"><br>
+
+    <button type="submit" class="btn_submit">Submit</button>
+</form>
+</div>
+<script>
+    let studentName = "{{ student.first_name }}";
+if (studentName != ''){
+    document.getElementById("first_name").value = studentName;
+};
+</script>
+
+{% endblock content %}
